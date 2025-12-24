@@ -1,4 +1,4 @@
-import express from "express"; 
+import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path"
@@ -15,10 +15,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve()
-if(process.env.NODE_ENV !== "production") {
-app.use(cors({
+if (process.env.NODE_ENV !== "production") {
+  app.use(cors({
     origin: "http://localhost:5173",
-}))
+  }))
 }
 // middleware to parse JSON
 app.use(express.json());
@@ -26,28 +26,26 @@ app.use(rateLimiter);
 
 
 //app.use((req,res,next) => {
-  //console.log("We just got a new req")
-  //next();
+//console.log("We just got a new req")
+//next();
 //})
+
+app.get("/", (req, res) => {
+  res.json({ message: "Server is ready" });
+});
 
 app.use("/api/notes", notesRoutes);
 
-if(process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist"))) 
-
- app.get("*", (req, res) => {
-   res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
-});
+if (process.env.NODE_ENV !== "production") {
+  connectDB().then(() => {
+    app.listen(PORT, () => {
+      console.log("Server is running on port:", PORT);
+    });
+  });
 }
 
-connectDB().then(()=>{
-    app.listen(PORT, () => {
-        console.log("Server is running on port:", PORT);
-      })
-
-})
+export default app;
 
 
 
 
-  
