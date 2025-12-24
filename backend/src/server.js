@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve()
 if (process.env.NODE_ENV !== "production") {
   app.use(cors({
-    origin: "https://notes-app-t2hz.vercel.app/",
+    origin: "http://localhost:5173",
   }))
 }
 // middleware to parse JSON
